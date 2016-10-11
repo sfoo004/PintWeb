@@ -141,7 +141,7 @@ public class StubDB {
        //create donors
 	   testDonor1 = createMockDonor(user10);
 	   testDonor2 = createMockDonor(user11);
-	   testDonor3 = createMockDonor(user12);
+	   testDonor3 = createMockDonor(user12); 
        
 	   //create notifications
 	   notification1 = createMockNotification(1, "MOAR BLOOD", "We need more blood", "Give us more blood", bloodDrive1);
