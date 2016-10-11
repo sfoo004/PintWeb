@@ -1,0 +1,69 @@
+<div class="loader-container" ng-hide="contentReady">
+    <div class="whirly-loader"></div>
+    <script type="text/javascript">
+        setTimeout(function() {
+            $(".whirly-loader").delay(300).css("opacity", "0.15");
+        }, 200);
+    </script>
+</div>
+
+<section class="wrapper" ng-show="contentReady">
+    <div class="row">
+        <div class="col-lg-12 main-chart">
+            <div class="well">
+                <h3 class="well-header"><strong>{{ bloodDrive.title }}</strong></h3>
+                <h5>{{ bloodDrive.startTime }} - {{ bloodDrive.endTime }} <strong>@</strong> {{ bloodDrive.address }}</h5>
+                <h5>Donors: {{ bloodDrive.numberOfDonors }}</h5>
+                <blockquote class="quote">
+                    <p>{{ bloodDrive.description }}</p>
+                    <!--<footer></footer>-->
+                </blockquote>
+            </div>
+
+            <div class="row mt">
+                <div class="col-md-12">
+                    <div class="content-panel">
+                        <table class="table table-striped table-advance table-hover">
+                            <h4></i>Nurses Assigned to this Blood Drive
+                                <button class="btn btn-theme btn-primary" ng-click="open()" id="add-nurse-button" type="button"
+                                        style="float:right; margin-right:15px; padding-bottom: 5px;">
+                                    <i class="fa fa-plus"></i> Add Nurses <span class="badge">{{ bloodDrive.unassignedNurses.length }}</span>
+                                </button>
+                                <button class="btn btn-theme" ng-click="removeNurses()" id="add-nurse-button" type="button"
+                                        style="float:right; margin-right:5px; padding-bottom: 5px;" ng-disabled="selectedNurses() == 0"><i
+                                        class="fa fa-times"></i> Remove Nurses
+                                </button>
+                            </h4>
+                            <hr>
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th><i class="fa fa-bookmark"></i> First Name</th>
+                                <th><i class="fa fa-bookmark"></i> Last Name</th>
+                                <th><i class="fa fa-bookmark"></i> Email</th>
+                                <th><i class="fa fa-bullhorn"></i> Phone</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="assignRow" ng-repeat="nurse in bloodDrive.assignedNurses" ng-click="rowClick(nurse)">
+                                <td>
+                                    <input type="checkbox" class="list-child" id="checkbox" ng-model="selectedNurses"
+                                           value="{{nurse}}"
+                                           ng-checked="nurse.selected"
+                                           ng-click="toggleObjSelection($event, nurse)"/>
+                                </td>
+                                <td>{{ nurse.firstName }}</td>
+                                <td>{{ nurse.lastName }}</td>
+                                <td>{{ nurse.email }}</td>
+                                <td>{{ nurse.phoneNumber }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- /content-panel -->
+                </div><!-- /col-md-12 -->
+            </div><!-- /row -->
+
+        </div><!-- /col-lg-9 END SECTION MIDDLE -->
+    </div>
+</section>
