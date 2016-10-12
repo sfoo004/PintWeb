@@ -22,7 +22,23 @@ import java.util.List;
 @RestController
 public class BloodDriveController {
 
-    @Autowired
+    public BloodDriveService getBloodDriveService() {
+		return bloodDriveService;
+	}
+
+	public void setBloodDriveService(BloodDriveService bloodDriveService) {
+		this.bloodDriveService = bloodDriveService;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	@Autowired
     private BloodDriveService bloodDriveService;
 
     @Autowired

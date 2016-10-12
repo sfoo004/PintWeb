@@ -206,7 +206,23 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
+    
+	@Autowired
     private HospitalService hospitalService;
+
+    public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	public HospitalService getHospitalService() {
+		return hospitalService;
+	}
+
+	public void setHospitalService(HospitalService hospitalService) {
+		this.hospitalService = hospitalService;
+	}
 }

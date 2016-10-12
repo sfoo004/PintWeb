@@ -23,7 +23,39 @@ public class EmployeeController {
 
     private final Session session;
 
-    @Autowired
+    public UserHelper getUserHelper() {
+		return userHelper;
+	}
+
+	public void setUserHelper(UserHelper userHelper) {
+		this.userHelper = userHelper;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	public EmployeeService getEmployeeService() {
+		return employeeService;
+	}
+
+	public void setEmployeeService(EmployeeService employeeService) {
+		this.employeeService = employeeService;
+	}
+
+	public EmployeeSummaryViewStrategy getViewStrategy() {
+		return viewStrategy;
+	}
+
+	public void setViewStrategy(EmployeeSummaryViewStrategy viewStrategy) {
+		this.viewStrategy = viewStrategy;
+	}
+
+	@Autowired
     private UserHelper userHelper;
 
     @Autowired

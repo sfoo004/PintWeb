@@ -14,10 +14,16 @@ import java.util.List;
 
 import org.mockito.Mock;
 
+import com.pint.BusinessLogic.Security.User;
+import com.pint.BusinessLogic.Security.UserRole;
 import com.pint.Data.DataFacade;
+import com.pint.Data.Models.Employee;
 import com.pint.Data.Models.Hospital;
 import com.pint.Data.Repositories.HospitalRepository;
 import com.pint.Presentation.Controllers.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import junit.framework.Assert;
 
@@ -27,7 +33,7 @@ public class PresentationControllerSubsystemTest extends StubDB {
 
 	@Before
 	public void setUp(){
-		
+		createStubDB();
 	}
 	
 	@After
@@ -36,27 +42,95 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	}
 
 	@Test
-	public void test01() {
+	public void test01S_createHospital() {
 		
-		HospitalController hc = Mockito.mock(HospitalController.class);
-		controllerFacade = new ControllerFacade(hc);
-		controllerFacade.createHospital("Test Hospital");
-
+		doNothing().when(hc.getHospitalRepository()).create("Test Hospital");
         // Assert.
-        verify(hc).createHospital("Test Hospital");
+        assertEquals("User succesfully created! (id = 0)", hc.createHospital("Test Hospital"));;
 	}
 	
 	@Test
-	public void test02() {
+	public void test02S_getHospital() {
 		
-        // Act.
-		HospitalRepository hr = Mockito.mock(HospitalRepository.class);
-		controllerFacade = new ControllerFacade(hr);
-		createStubDB();
-        List<Hospital> hospitals = controllerFacade.getHospitals();
-
         // Assert.
-        assertEquals(3, hospitals.size());
+        assertEquals("Returned hospital succesfully! (name = MDC Hospital)", hc.getHospital(2));;
 	}
+	
+	@Test
+	public void test03S_getAllHospitals() {
+		
+        // Assert.
+        assertEquals("FIU Hospital\nMDC Hospital\nUM Hospital\n", hc.getHospitals());;
+	}
+	
+	@Test
+	public void test04S_createEmployee() throws Exception {
+		
+		when(uc.getUserService().createEmployee("nurse@nurse.com", "test123", "test", "nurse", "3052573457", UserRole.NURSE, (long)2)).thenReturn(testNurse1);
+        // Assert.
+        assertEquals(testNurse1, uc.createEmployee("nurse@nurse.com", "test123", "test", "nurse", "3052573457", "NURSE", (long)2));;
+	}
+	
+	@Test
+	public void test05S_deleteUser() {
+		
+		doNothing().when(uc.getUserService()).deleteUser("Peter@email.com");
+        // Assert.
+        assertEquals("User succesfully deleted!", uc.deleteUser("Peter@email.com"));
+    }
+	
+	@Test
+	public void test06S_updateUser() {
+		
+		when(uc.getUserService().updateUser(2, "Foo@gmail.com")).thenReturn(user1);
+        // Assert.
+        assertEquals(user1, uc.updateUser(2, "Foo@gmail.com"));
+    }
+	
+	@Test
+	public void test07S_getNurses() {
+		
+        // Assert.
+        assertEquals(3, ((List <Employee>)uc.getNurses(2)).size());
+    }
+	
+	@Test
+	public void test08S_getByEmail() {
+		
+        // Assert.
+        assertEquals(user3, uc.getByEmail("employee3@fiu.edu"));
+    }
+	
+	@Test
+	public void test09S_getCurrent() {
+		
+        // Assert.
+
+    }
+	
+	@Test
+	public void test010S_changePassword() {
+		
+        // Assert.
+
+    }
+	
+	@Test
+	public void test011S_grantRole() {
+		
+		user9.grantRole(UserRole.DONOR);
+		doNothing().when(uc.getUserService()).updateUser(user9);
+        // Assert.
+        assertEquals("<200 OK,role granted,{}>", uc.grantRole(user9, UserRole.DONOR).toString());
+    }
+	
+	@Test
+	public void test012S_revokeRole() {
+		
+		user6.revokeRole(UserRole.NURSE);
+		doNothing().when(uc.getUserService()).updateUser(user6);
+        // Assert.
+        assertEquals("<200 OK,role revoked,{}>", uc.revokeRole(user6, UserRole.DONOR).toString());
+    }
 
 }

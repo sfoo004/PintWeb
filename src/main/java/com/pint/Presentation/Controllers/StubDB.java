@@ -9,54 +9,76 @@ import java.util.List;
 import org.mockito.Mockito;
 
 import com.pint.BusinessLogic.Security.User;
+import com.pint.BusinessLogic.Security.UserHelper;
 import com.pint.BusinessLogic.Security.UserRole;
+import com.pint.BusinessLogic.Services.BloodDriveService;
+import com.pint.BusinessLogic.Services.EmployeeService;
+import com.pint.BusinessLogic.Services.HospitalService;
+import com.pint.BusinessLogic.Services.NotificationService;
+import com.pint.BusinessLogic.Services.UserService;
 import  com.pint.Data.Models.*;
+import com.pint.Data.Repositories.HospitalRepository;
+import com.pint.Presentation.ViewStrategies.EmployeeSummaryViewStrategy;
 
 public class StubDB {
 	
-	Hospital hospital1;
-	Hospital hospital2;
-	Hospital hospital3;
-	Employee testEmployee1;
-	Employee testEmployee2;
-	Employee testEmployee3;
-	Employee testNurse1;
-	Employee testNurse2;
-	Employee testNurse3;
-	Employee testNurse4;
-	Employee testNurse5;
-	Employee testNurse6;
-	User user1;
-	User user2;
-	User user3;
-	User user4;
-	User user5;
-	User user6;
-	User user7;
-	User user8;
-	User user9;
-	User user10;
-	User user11;
-	User user12;
-	Donor testDonor1;
-	Donor testDonor2;
-	Donor testDonor3;
-	BloodDrive bloodDrive1;
-	BloodDrive bloodDrive2;
-	BloodDrive bloodDrive3;
-	Notification notification1;
-	Notification notification2;
-	Notification notification3;
+	protected Hospital hospital1;
+	protected Hospital hospital2;
+	protected Hospital hospital3;
+	protected Employee testEmployee1;
+	protected Employee testEmployee2;
+	protected Employee testEmployee3;
+	protected Employee testNurse1;
+	protected Employee testNurse2;
+	protected Employee testNurse3;
+	protected Employee testNurse4;
+	protected Employee testNurse5;
+	protected Employee testNurse6;
+	protected User user1;
+	protected User user2;
+	protected User user3;
+	protected User user4;
+	protected User user5;
+	protected User user6;
+	protected User user7;
+	protected User user8;
+	protected User user9;
+	protected User user10;
+	protected User user11;
+	protected User user12;
+	protected Donor testDonor1;
+	protected Donor testDonor2;
+	protected Donor testDonor3;
+	protected BloodDrive bloodDrive1;
+	protected BloodDrive bloodDrive2;
+	protected BloodDrive bloodDrive3;
+	protected Notification notification1;
+	protected Notification notification2;
+	protected Notification notification3;
 	
 	protected ControllerFacade controllerFacade;
+	protected HospitalRepository hospitalRepository = Mockito.mock(HospitalRepository.class);
+	protected UserService userService = Mockito.mock(UserService.class);
+	protected BloodDriveService bloodDriveService = Mockito.mock(BloodDriveService.class);
+	protected EmployeeService employeeService = Mockito.mock(EmployeeService.class);
+	protected EmployeeSummaryViewStrategy employeeSummaryViewStrategy = Mockito.mock(EmployeeSummaryViewStrategy.class);
+	protected UserHelper userHelper = Mockito.mock(UserHelper.class);
+	protected NotificationService notificationService = Mockito.mock(NotificationService.class);
+	protected HospitalService hospitalService = Mockito.mock(HospitalService.class);
+	
+	protected HospitalController hc = new HospitalController();
+	protected BloodDriveController bdc = new BloodDriveController();
+	protected EmployeeController ec = new EmployeeController();
+	protected UserController uc = new UserController();
+	protected Session s = new Session();
 	
 	//---------------------DATA METHODS------------------------
  	protected BloodDrive createMockBloodDrive(long bloodDriveId, String title, String description, Date startTime, Date endTime, String address, int numberofDonors, String city, String state, int zip, Hospital hospitalId) {
         BloodDrive drive = new BloodDrive(
                 bloodDriveId, title, description, startTime, endTime, address, numberofDonors, city, state, zip, hospitalId);
 
-        when(controllerFacade.getBloodDrivesByLocation(city, state))
-                .thenReturn(drive);
+//        when(controllerFacade.getBloodDrivesByLocation(city, state))
+//                .thenReturn(drive);
 
         return drive;
     }
@@ -94,7 +116,7 @@ public class StubDB {
     protected Hospital createMockHospital(long hospitalId, String hospitalName) {
         Hospital hospital = new Hospital(hospitalId, hospitalName);
         
-        when(controllerFacade.getHospital(hospitalId))
+        when(hospitalRepository.get(hospitalId))
         .thenReturn(hospital);
         
         return hospital;
@@ -103,6 +125,16 @@ public class StubDB {
    public void createStubDB(){
 	   
 	   controllerFacade = Mockito.mock(ControllerFacade.class);
+	   hc.setHospitalRepository(hospitalRepository);
+	   bdc.setBloodDriveService(bloodDriveService);
+	   bdc.setUserService(userService);
+	   ec.setEmployeeService(employeeService);
+	   ec.setUserHelper(userHelper);
+	   ec.setUserService(userService);
+	   ec.setViewStrategy(employeeSummaryViewStrategy);
+	   uc.setHospitalService(hospitalService);
+	   uc.setUserService(userService);
+	   
 	   //create hospitals
 	   hospital1 = createMockHospital(1, "FIU Hospital");
 	   hospital2 = createMockHospital(2, "MDC Hospital");
@@ -161,15 +193,15 @@ public class StubDB {
 	   when(controllerFacade.getUser(user11)).thenReturn(user11);
 	   when(controllerFacade.getUser(user12)).thenReturn(user12);
 	   
-	   when(controllerFacade.getByEmail("employee1@fiu.edu")).thenReturn(testEmployee1);
-	   when(controllerFacade.getByEmail("employee2@fiu.edu")).thenReturn(testEmployee2);
-	   when(controllerFacade.getByEmail("employee3@fiu.edu")).thenReturn(testEmployee3);
-	   when(controllerFacade.getByEmail("nurse1@fiu.edu")).thenReturn(testNurse1);
-	   when(controllerFacade.getByEmail("nurse2@fiu.edu")).thenReturn(testNurse2);
-	   when(controllerFacade.getByEmail("nurse3@fiu.edu")).thenReturn(testNurse3);
-	   when(controllerFacade.getByEmail("nurse4@fiu.edu")).thenReturn(testNurse4);
-	   when(controllerFacade.getByEmail("nurse5@fiu.edu")).thenReturn(testNurse5);
-	   when(controllerFacade.getByEmail("nurse6@fiu.edu")).thenReturn(testNurse6);
+	   when(userService.getUserByEmail("employee1@fiu.edu")).thenReturn(user1);
+	   when(userService.getUserByEmail("employee2@fiu.edu")).thenReturn(user2);
+	   when(userService.getUserByEmail("employee3@fiu.edu")).thenReturn(user3);
+	   when(userService.getUserByEmail("nurse1@fiu.edu")).thenReturn(user4);
+	   when(userService.getUserByEmail("nurse2@fiu.edu")).thenReturn(user5);
+	   when(userService.getUserByEmail("nurse3@fiu.edu")).thenReturn(user6);
+	   when(userService.getUserByEmail("nurse4@fiu.edu")).thenReturn(user7);
+	   when(userService.getUserByEmail("nurse5@fiu.edu")).thenReturn(user8);
+	   when(userService.getUserByEmail("nurse6@fiu.edu")).thenReturn(user9);
 	   
 	   List<User> users = new ArrayList<>();
 	   users.add(user1);
@@ -193,7 +225,7 @@ public class StubDB {
        hospitals.add(hospital2);
        hospitals.add(hospital3);
 	   
-	   when(controllerFacade.getHospitals()).thenReturn(hospitals);
+	   when(hospitalRepository.getHospitals()).thenReturn(hospitals);
 	   
 	   List<Employee> hospitalNurses1 = new ArrayList<>();
 	   hospitalNurses1.add(testNurse1);
@@ -207,9 +239,9 @@ public class StubDB {
 	   List<Employee> hospitalNurses3 = new ArrayList<>();
 	   hospitalNurses3.add(testNurse6);
 	   
-	   when(controllerFacade.getNurses(1)).thenReturn(hospitalNurses1);
-	   when(controllerFacade.getNurses(2)).thenReturn(hospitalNurses2);
-	   when(controllerFacade.getNurses(3)).thenReturn(hospitalNurses3);
+	   when(hospitalService.getNurses((long)1)).thenReturn(hospitalNurses1);
+	   when(hospitalService.getNurses((long)2)).thenReturn(hospitalNurses2);
+	   when(hospitalService.getNurses((long)3)).thenReturn(hospitalNurses3);
 	   
 	   List<BloodDrive> hialeahBloodDrive = new ArrayList<>();
 	   hialeahBloodDrive.add(bloodDrive2);

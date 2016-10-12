@@ -95,48 +95,10 @@ public class ControllerFacade {
     
     @Autowired
     private UserController userController;
-    
-    //----------------CONTRUCTORS--------------------------
-    public ControllerFacade(BloodDriveController bdc){
-    	this.bloodDriveController = bdc;
-    }
-    
-    public ControllerFacade(DonorController dc){
-    	this.donorController = dc;
-    }
-    
-    public ControllerFacade(EmployeeController ec){
-    	this.employeeController = ec;
-    }
-    
-    public ControllerFacade(HospitalController hc){
-    	this.hospitalController = hc;
-    }
-    
-    public ControllerFacade(HospitalRepository hr){
-    	this.hospitalRepository = hr;
-    }
-    
-    public ControllerFacade(NotificationController nc){
-    	this.notificationController = nc;
-    }
-    
-    public ControllerFacade(Session s){
-    	this.session = s;
-    }
-    
-    public ControllerFacade(UserController uc){
-    	this.userController = uc;
-    }
-    
-    public ControllerFacade(UserService us){
-    	this.userService = us;
-    	
-    }
 	
 //----------------HOSPITAL CONTROLLER -------------------------
-	public void createHospital(String hospitalName) {
-		hospitalController.createHospital(hospitalName);
+	public String createHospital(String hospitalName) {
+		return hospitalController.createHospital(hospitalName);
     }
 	
 	public Hospital getHospital(long hospitalId){
