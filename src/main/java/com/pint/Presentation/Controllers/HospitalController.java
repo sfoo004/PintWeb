@@ -77,13 +77,6 @@ public class HospitalController {
 //Change back to Private
     @Autowired
     private HospitalRepository hospitalRepository;
-    
-    public HospitalRepository getHospitalRepository(){
-    	return hospitalRepository;
-    }
-    
-    public void setHospitalRepository(HospitalRepository hp){
-    	this.hospitalRepository = hp;
-    }
+
 }
 

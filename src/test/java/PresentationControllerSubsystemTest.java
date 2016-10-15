@@ -17,15 +17,17 @@ import org.mockito.Mock;
 import com.pint.BusinessLogic.Security.User;
 import com.pint.BusinessLogic.Security.UserRole;
 import com.pint.Data.DataFacade;
+import com.pint.Data.Models.BloodDrive;
 import com.pint.Data.Models.Employee;
 import com.pint.Data.Models.Hospital;
 import com.pint.Data.Repositories.HospitalRepository;
 import com.pint.Presentation.Controllers.*;
+import com.pint.Presentation.ViewModels.BloodDriveSummaryViewModel;
+import com.pint.Presentation.ViewStrategies.BloodDriveDetailViewStrategy;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import junit.framework.Assert;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,11 +42,11 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	public void tearDown(){
 		
 	}
-
+//------------------------ HOSPITAL CONTROLLER ----------------------------
 	@Test
 	public void test01S_createHospital() {
 		
-		doNothing().when(hc.getHospitalRepository()).create("Test Hospital");
+		
         // Assert.
         assertEquals("User succesfully created! (id = 0)", hc.createHospital("Test Hospital"));;
 	}
@@ -62,7 +64,7 @@ public class PresentationControllerSubsystemTest extends StubDB {
         // Assert.
         assertEquals("FIU Hospital\nMDC Hospital\nUM Hospital\n", hc.getHospitals());;
 	}
-	
+//--------------------USER CONTROLLER ----------------------------	
 	@Test
 	public void test04S_createEmployee() throws Exception {
 		
@@ -125,6 +127,13 @@ public class PresentationControllerSubsystemTest extends StubDB {
     }
 	
 	@Test
+	public void test011R_grantRole() {
+
+        // Assert.
+        assertEquals("<422 Unprocessable Entity,invalid user id,{}>", uc.grantRole(null, UserRole.DONOR).toString());
+    }
+	
+	@Test
 	public void test012S_revokeRole() {
 		
 		user6.revokeRole(UserRole.NURSE);
@@ -132,5 +141,34 @@ public class PresentationControllerSubsystemTest extends StubDB {
         // Assert.
         assertEquals("<200 OK,role revoked,{}>", uc.revokeRole(user6, UserRole.DONOR).toString());
     }
+	
+	@Test
+	public void test012R_revokeRole() {
+		
+        // Assert.
+        assertEquals("<422 Unprocessable Entity,invalid user id,{}>", uc.revokeRole(null, UserRole.DONOR).toString());
+    }
+//------------------BLOOD DRIVE CONTROLLER -------------------------
+	@Test
+	public void test013S_getBloodDrivesByLocation(){
+		
+		assertEquals(1, ((List <BloodDrive>)bdc.getBloodDrivesByLocation("Hialeah", "Florida")).size());
+	}
+	
+	@Test
+	public void test014S_getBloodDriveByIdForDonor(){
+		
+		assertEquals(((BloodDriveSummaryViewModel)(new BloodDriveDetailViewStrategy().CreateViewModel(bloodDrive1))).title, 
+				((BloodDriveSummaryViewModel)bdc.getBloodDriveByIdForDonor((long)10)).title);
+	}
+	
+	@Test
+	public void test015S_getBloodDrives(){
+		
+	}
+//-------------------EMPLOYEEE CONTROLLER------------------------
+	
+	
+//-------------------NOTIFICATION CONTROLLER---------------------
 
 }

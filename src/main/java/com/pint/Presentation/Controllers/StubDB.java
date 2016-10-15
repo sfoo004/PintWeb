@@ -6,6 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations.*;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mockito;
 
 import com.pint.BusinessLogic.Security.User;
@@ -20,7 +25,48 @@ import  com.pint.Data.Models.*;
 import com.pint.Data.Repositories.HospitalRepository;
 import com.pint.Presentation.ViewStrategies.EmployeeSummaryViewStrategy;
 
+@RunWith(MockitoJUnitRunner.class)
 public class StubDB {
+	
+	@Mock
+	private HospitalRepository hospitalRepository;
+	
+	@Mock
+	private UserService userService;
+	
+	@Mock
+	private BloodDriveService bloodDriveService;
+
+	@Mock
+	private EmployeeService employeeService;
+	
+	@Mock
+	private EmployeeSummaryViewStrategy employeeSummaryViewStrategy;
+	
+	@Mock
+	private UserHelper userHelper;
+	
+	@Mock
+	private NotificationService notificationService;
+	
+	@Mock
+	private HospitalService hospitalService;
+	
+	@InjectMocks
+	protected HospitalController hc = new HospitalController();
+	
+	@InjectMocks
+	protected BloodDriveController bdc = new BloodDriveController();
+
+	@InjectMocks
+	protected EmployeeController ec = new EmployeeController();
+	
+	@InjectMocks
+	protected UserController uc = new UserController();
+	
+	@InjectMocks
+	protected Session s = new Session();
+	
 	
 	protected Hospital hospital1;
 	protected Hospital hospital2;
@@ -57,20 +103,6 @@ public class StubDB {
 	protected Notification notification3;
 	
 	protected ControllerFacade controllerFacade;
-	protected HospitalRepository hospitalRepository = Mockito.mock(HospitalRepository.class);
-	protected UserService userService = Mockito.mock(UserService.class);
-	protected BloodDriveService bloodDriveService = Mockito.mock(BloodDriveService.class);
-	protected EmployeeService employeeService = Mockito.mock(EmployeeService.class);
-	protected EmployeeSummaryViewStrategy employeeSummaryViewStrategy = Mockito.mock(EmployeeSummaryViewStrategy.class);
-	protected UserHelper userHelper = Mockito.mock(UserHelper.class);
-	protected NotificationService notificationService = Mockito.mock(NotificationService.class);
-	protected HospitalService hospitalService = Mockito.mock(HospitalService.class);
-	
-	protected HospitalController hc = new HospitalController();
-	protected BloodDriveController bdc = new BloodDriveController();
-	protected EmployeeController ec = new EmployeeController();
-	protected UserController uc = new UserController();
-	protected Session s = new Session();
 	
 	//---------------------DATA METHODS------------------------
  	protected BloodDrive createMockBloodDrive(long bloodDriveId, String title, String description, Date startTime, Date endTime, String address, int numberofDonors, String city, String state, int zip, Hospital hospitalId) {
@@ -122,18 +154,11 @@ public class StubDB {
         return hospital;
     }
 //----------------------DATA---------------------------------
-   public void createStubDB(){
+    
+    public void createStubDB(){
+	   
 	   
 	   controllerFacade = Mockito.mock(ControllerFacade.class);
-	   hc.setHospitalRepository(hospitalRepository);
-	   bdc.setBloodDriveService(bloodDriveService);
-	   bdc.setUserService(userService);
-	   ec.setEmployeeService(employeeService);
-	   ec.setUserHelper(userHelper);
-	   ec.setUserService(userService);
-	   ec.setViewStrategy(employeeSummaryViewStrategy);
-	   uc.setHospitalService(hospitalService);
-	   uc.setUserService(userService);
 	   
 	   //create hospitals
 	   hospital1 = createMockHospital(1, "FIU Hospital");
@@ -252,9 +277,9 @@ public class StubDB {
 	   List<BloodDrive> coralGablesBloodDrive = new ArrayList<>();
 	   coralGablesBloodDrive.add(bloodDrive3);
 	   
-	   when(controllerFacade.getBloodDrivesByLocation("Hialeah", "Florida")).thenReturn(hialeahBloodDrive);
-	   when(controllerFacade.getBloodDrivesByLocation("SweetWater", "Florida")).thenReturn(sweetwaterBloodDrive);
-	   when(controllerFacade.getBloodDrivesByLocation("Coral Gables", "Florida")).thenReturn(coralGablesBloodDrive);
+	   when(bloodDriveService.getBloodDrivesByLocation("Hialeah", "Florida")).thenReturn(hialeahBloodDrive);
+	   when(bloodDriveService.getBloodDrivesByLocation("SweetWater", "Florida")).thenReturn(sweetwaterBloodDrive);
+	   when(bloodDriveService.getBloodDrivesByLocation("Coral Gables", "Florida")).thenReturn(coralGablesBloodDrive);
 	   
 	   List<BloodDrive> bloodDrives = new ArrayList<>();
 	   bloodDrives.add(bloodDrive1);
@@ -263,9 +288,9 @@ public class StubDB {
 	   
 	   when(controllerFacade.getBloodDrives()).thenReturn(bloodDrives);
 	   
-	   when(controllerFacade.getBloodDriveByIdForDonor((long)10)).thenReturn(bloodDrive1);
-	   when(controllerFacade.getBloodDriveByIdForDonor((long)11)).thenReturn(bloodDrive2);
-	   when(controllerFacade.getBloodDriveByIdForDonor((long)12)).thenReturn(bloodDrive3);
+	   when(bloodDriveService.getBloodDriveById((long)10)).thenReturn(bloodDrive1);
+	   when(bloodDriveService.getBloodDriveById((long)11)).thenReturn(bloodDrive2);
+	   when(bloodDriveService.getBloodDriveById((long)12)).thenReturn(bloodDrive3);
 	   
    }
 

@@ -19,14 +19,6 @@ public class NotificationController {
     private NotificationService notificationService;
     private Session session;
 
-    public NotificationService getNotificationService() {
-		return notificationService;
-	}
-
-	public void setNotificationService(NotificationService notificationService) {
-		this.notificationService = notificationService;
-	}
-
 	public NotificationController() {
         this.session = new Session();
     }

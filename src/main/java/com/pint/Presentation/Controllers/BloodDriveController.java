@@ -21,23 +21,7 @@ import java.util.List;
 
 @RestController
 public class BloodDriveController {
-
-    public BloodDriveService getBloodDriveService() {
-		return bloodDriveService;
-	}
-
-	public void setBloodDriveService(BloodDriveService bloodDriveService) {
-		this.bloodDriveService = bloodDriveService;
-	}
-
-	public UserService getUserService() {
-		return userService;
-	}
-
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
+	
 	@Autowired
     private BloodDriveService bloodDriveService;
 
@@ -98,7 +82,7 @@ public class BloodDriveController {
         } catch (Exception ex) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
-
+        
         return new BloodDriveDetailViewStrategy().CreateViewModel(bloodDrive);
     }
 
