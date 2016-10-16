@@ -10,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mockito.Mock;
@@ -22,8 +23,13 @@ import com.pint.Data.Models.Employee;
 import com.pint.Data.Models.Hospital;
 import com.pint.Data.Repositories.HospitalRepository;
 import com.pint.Presentation.Controllers.*;
+import com.pint.Presentation.ViewModels.BloodDriveDetailCoordinatorViewModel;
+import com.pint.Presentation.ViewModels.BloodDriveDetailNurseViewModel;
 import com.pint.Presentation.ViewModels.BloodDriveSummaryViewModel;
+import com.pint.Presentation.ViewModels.ViewModel;
 import com.pint.Presentation.ViewStrategies.BloodDriveDetailViewStrategy;
+import com.pint.Presentation.ViewStrategies.BloodDriveSummaryViewStrategy;
+import com.pint.Presentation.ViewStrategies.EmployeeSummaryViewStrategy;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -68,7 +74,7 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	@Test
 	public void test04S_createEmployee() throws Exception {
 		
-		when(uc.getUserService().createEmployee("nurse@nurse.com", "test123", "test", "nurse", "3052573457", UserRole.NURSE, (long)2)).thenReturn(testNurse1);
+		when(userService.createEmployee("nurse@nurse.com", "test123", "test", "nurse", "3052573457", UserRole.NURSE, (long)2)).thenReturn(testNurse1);
         // Assert.
         assertEquals(testNurse1, uc.createEmployee("nurse@nurse.com", "test123", "test", "nurse", "3052573457", "NURSE", (long)2));;
 	}
@@ -76,7 +82,7 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	@Test
 	public void test05S_deleteUser() {
 		
-		doNothing().when(uc.getUserService()).deleteUser("Peter@email.com");
+		doNothing().when(userService).deleteUser("Peter@email.com");
         // Assert.
         assertEquals("User succesfully deleted!", uc.deleteUser("Peter@email.com"));
     }
@@ -84,7 +90,7 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	@Test
 	public void test06S_updateUser() {
 		
-		when(uc.getUserService().updateUser(2, "Foo@gmail.com")).thenReturn(user1);
+		when(userService.updateUser(2, "Foo@gmail.com")).thenReturn(user1);
         // Assert.
         assertEquals(user1, uc.updateUser(2, "Foo@gmail.com"));
     }
@@ -121,7 +127,7 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	public void test011S_grantRole() {
 		
 		user9.grantRole(UserRole.DONOR);
-		doNothing().when(uc.getUserService()).updateUser(user9);
+		doNothing().when(userService).updateUser(user9);
         // Assert.
         assertEquals("<200 OK,role granted,{}>", uc.grantRole(user9, UserRole.DONOR).toString());
     }
@@ -137,7 +143,7 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	public void test012S_revokeRole() {
 		
 		user6.revokeRole(UserRole.NURSE);
-		doNothing().when(uc.getUserService()).updateUser(user6);
+		doNothing().when(userService).updateUser(user6);
         // Assert.
         assertEquals("<200 OK,role revoked,{}>", uc.revokeRole(user6, UserRole.DONOR).toString());
     }
@@ -152,18 +158,100 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	@Test
 	public void test013S_getBloodDrivesByLocation(){
 		
+		// Assert.
 		assertEquals(1, ((List <BloodDrive>)bdc.getBloodDrivesByLocation("Hialeah", "Florida")).size());
 	}
 	
 	@Test
 	public void test014S_getBloodDriveByIdForDonor(){
 		
+		// Assert.
 		assertEquals(((BloodDriveSummaryViewModel)(new BloodDriveDetailViewStrategy().CreateViewModel(bloodDrive1))).title, 
 				((BloodDriveSummaryViewModel)bdc.getBloodDriveByIdForDonor((long)10)).title);
 	}
 	
 	@Test
-	public void test015S_getBloodDrives(){
+	public void test015S_getBloodDrives() throws Exception{
+		
+		when(session.getUser()).thenReturn(user1);
+		
+		// Assert.
+		assertEquals(((List<ViewModel>)new BloodDriveSummaryViewStrategy().CreateViewModel(sweetwaterBloodDrive)).size(), ((List<ViewModel>)bdc.getBloodDrives()).size());
+		
+	}
+	
+	@Test
+	public void test016S_getBloodDrivesForNurse() throws Exception{
+		
+		when(session.getUser()).thenReturn(user4);
+		
+		// Assert.
+		assertEquals(((List<ViewModel>)new BloodDriveSummaryViewStrategy().CreateViewModel(sweetwaterBloodDrive)).size(), ((List<ViewModel>)bdc.getBloodDrivesForNurse()).size());
+		
+	}
+	
+	@Test
+	public void test017S_getBloodDriveByIdForCoordinator() throws Exception{
+		
+		when(session.getUser()).thenReturn(user1);
+		// Assert.
+		assertEquals(((BloodDriveDetailCoordinatorViewModel)new BloodDriveDetailViewStrategy(hospitalNurses1, notHospitalNurses1).CreateViewModel(bloodDrive1)).title, 
+				((BloodDriveDetailCoordinatorViewModel)bdc.getBloodDriveByIdForCoordinator((long)10)).title);
+		
+	}
+	
+	@Test
+	public void test018S_getBloodDriveByIdForNurse() throws Exception{
+		
+		when(session.getUser()).thenReturn(user4);
+		// Assert.
+		assertEquals(((BloodDriveDetailNurseViewModel)new BloodDriveDetailViewStrategy(
+                new EmployeeSummaryViewStrategy().CreateViewModel(testCoordinator1))
+                .CreateViewModel(bloodDrive1)).title, 
+				((BloodDriveDetailNurseViewModel)bdc.getBloodDriveByIdForNurse((long)10)).title);
+		
+	}
+	
+	@Test
+	public void test019S_inputDonor() throws Exception{
+		
+		when(session.getUser()).thenReturn(user4);
+		doNothing().when(bloodDriveService).inputDonor(user4, (long)1, "hello@world.com");
+		// Assert.
+		assertEquals((long)1, bdc.inputDonor((long)1, "hello@world.com"));
+		
+	}
+	
+	@Test
+	public void test020S_assignNurses() throws Exception{
+		
+		when(session.getUser()).thenReturn(user1);
+		List <Long> nurse = new ArrayList<>();
+		nurse.add((long)5);
+		nurse.add((long)6);
+		
+		ArrayList <Integer> nurseInt = new ArrayList<>();
+		nurseInt.add(5);
+		nurseInt.add(6);
+		doNothing().when(bloodDriveService).assignNurses(user1, (long)1, nurse);
+		// Assert.
+		assertEquals((long)1, bdc.assignNurses((long) 1, nurseInt));
+		
+	}
+	
+	public void test021S_unassignNurses() throws Exception{
+		
+		when(session.getUser()).thenReturn(user1);
+		List <Long> nurse = new ArrayList<>();
+		nurse.add((long)5);
+		nurse.add((long)6);
+		
+		ArrayList <Integer> nurseInt = new ArrayList<>();
+		nurseInt.add(5);
+		nurseInt.add(6);
+		doNothing().when(bloodDriveService).unassignNurses(user1, (long)1, nurse);
+		// Assert.
+		assertEquals((long)1, bdc.unassignNurses((long) 1, nurseInt));
 		
 	}
 //-------------------EMPLOYEEE CONTROLLER------------------------
