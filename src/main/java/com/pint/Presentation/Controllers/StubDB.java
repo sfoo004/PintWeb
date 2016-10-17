@@ -23,6 +23,8 @@ import com.pint.BusinessLogic.Services.NotificationService;
 import com.pint.BusinessLogic.Services.UserService;
 import  com.pint.Data.Models.*;
 import com.pint.Data.Repositories.HospitalRepository;
+import com.pint.Presentation.ViewModels.EmployeeSummaryViewModel;
+import com.pint.Presentation.ViewModels.ViewModel;
 import com.pint.Presentation.ViewStrategies.EmployeeSummaryViewStrategy;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,6 +57,9 @@ public class StubDB {
 	@Mock
 	protected UserProvider session;
 	
+	@Mock
+	protected Session s;
+	
 	@InjectMocks
 	protected HospitalController hc = new HospitalController();
 	
@@ -62,13 +67,13 @@ public class StubDB {
 	protected BloodDriveController bdc = new BloodDriveController();
 
 	@InjectMocks
-	protected EmployeeController ec = new EmployeeController();
+	protected EmployeeController ec;
 	
 	@InjectMocks
 	protected UserController uc = new UserController();
 	
 	@InjectMocks
-	protected Session s = new Session();
+	protected NotificationController n;
 	
 	
 	protected Hospital hospital1;
@@ -116,7 +121,6 @@ public class StubDB {
 	protected List<Employee> notHospitalNurses2 = new ArrayList<>();
 	protected List<Employee> notHospitalNurses3 = new ArrayList<>();
 	
-	protected ControllerFacade controllerFacade;
 	
 	//---------------------DATA METHODS------------------------
  	protected BloodDrive createMockBloodDrive(long bloodDriveId, String title, String description, Date startTime, Date endTime, String address, int numberofDonors, String city, String state, int zip, Hospital hospitalId) {
@@ -138,6 +142,7 @@ public class StubDB {
     protected Employee createMockEmployee(User user, Hospital hospital) {
         Employee employee = new Employee(user.getId());
         employee.setHospitalId(hospital);
+        employee.setEmail(user.getUsername());
         
         return employee;
     }
@@ -169,7 +174,6 @@ public class StubDB {
     public void createStubDB(){
 	   
 	   
-	   controllerFacade = Mockito.mock(ControllerFacade.class);
 	   
 	   //create hospitals
 	   hospital1 = createMockHospital(1, "FIU Hospital");
@@ -198,15 +202,25 @@ public class StubDB {
 	   
        //create employees
 	   testCoordinator1 = createMockEmployee(user1, hospital1);
+	   testCoordinator1.setRole("COORDINATOR");
 	   testCoordinator2 = createMockEmployee(user2, hospital2);
+	   testCoordinator2.setRole("COORDINATOR");
 	   testCoordinator3 = createMockEmployee(user3, hospital3);
+	   testCoordinator3.setRole("COORDINATOR");
        testNurse1 = createMockEmployee(user4, hospital1);
+       testNurse1.setRole("NURSE");
        testNurse2 = createMockEmployee(user5, hospital2);
+       testNurse2.setRole("NURSE");
        testNurse3 = createMockEmployee(user6, hospital2);
+       testNurse3.setRole("NURSE");
        testNurse4 = createMockEmployee(user7, hospital1);
+       testNurse4.setRole("NURSE");
        testNurse5 = createMockEmployee(user8, hospital2);
+       testNurse5.setRole("NURSE");
        testNurse6 = createMockEmployee(user9, hospital3);
+       testNurse6.setRole("NURSE");
        testManager1 = createMockEmployee(user13, hospital1);
+       testManager1.setRole("MANAGER");
        
        //create donors
 	   testDonor1 = createMockDonor(user10);
@@ -242,9 +256,10 @@ public class StubDB {
 	   users.add(user10);
 	   users.add(user11);
 	   users.add(user12);
+	   users.add(user13);
 	   
 	   //list all the users
-	   when(controllerFacade.list()).thenReturn(users);
+	   //when(controllerFacade.list()).thenReturn(users);
 	   
 	   List<Hospital> hospitals = new ArrayList<>();
        hospitals.add(hospital1);
@@ -300,7 +315,7 @@ public class StubDB {
 	   bloodDrives.add(bloodDrive3);
 	   
 	   //return all blood drives
-	   when(controllerFacade.getBloodDrives()).thenReturn(bloodDrives);
+	   //when(controllerFacade.getBloodDrives()).thenReturn(bloodDrives);
 	   
 	   //get blood drive by Id
 	   when(bloodDriveService.getBloodDriveById((long)10)).thenReturn(bloodDrive1);
@@ -317,11 +332,14 @@ public class StubDB {
 	   when(userService.getEmployeeByUserId((long)7)).thenReturn(testNurse4);
 	   when(userService.getEmployeeByUserId((long)8)).thenReturn(testNurse5);
 	   when(userService.getEmployeeByUserId((long)9)).thenReturn(testNurse6);
+	   when(userService.getEmployeeByUserId((long)13)).thenReturn(testManager1);
 	   
+	   //get blood drive by coordinator returns a single blood drive
 	   when(bloodDriveService.getBloodDrivesForCoordinator(hospital1, user1)).thenReturn(sweetwaterBloodDrive);
 	   when(bloodDriveService.getBloodDrivesForCoordinator(hospital2, user2)).thenReturn(hialeahBloodDrive);
 	   when(bloodDriveService.getBloodDrivesForCoordinator(hospital3, user3)).thenReturn(coralGablesBloodDrive);
 	   
+	   //get blood drive for nurse returns a single blood drive
 	   when(bloodDriveService.getBloodDrivesForNurse(hospital1, user4)).thenReturn(sweetwaterBloodDrive);
 	   when(bloodDriveService.getBloodDrivesForNurse(hospital1, user7)).thenReturn(sweetwaterBloodDrive);
 	   when(bloodDriveService.getBloodDrivesForNurse(hospital2, user5)).thenReturn(hialeahBloodDrive);
@@ -329,6 +347,7 @@ public class StubDB {
 	   when(bloodDriveService.getBloodDrivesForNurse(hospital2, user8)).thenReturn(hialeahBloodDrive);
 	   when(bloodDriveService.getBloodDrivesForNurse(hospital3, user9)).thenReturn(coralGablesBloodDrive);
 	   
+	   //get blood drive by nurse returns a single blood drive
 	   when(bloodDriveService.getBloodDriveByNurse(10, user4)).thenReturn(bloodDrive1);
 	   when(bloodDriveService.getBloodDriveByNurse(10, user7)).thenReturn(bloodDrive1);
 	   when(bloodDriveService.getBloodDriveByNurse(11, user5)).thenReturn(bloodDrive2);
@@ -336,21 +355,50 @@ public class StubDB {
 	   when(bloodDriveService.getBloodDriveByNurse(11, user8)).thenReturn(bloodDrive2);
 	   when(bloodDriveService.getBloodDriveByNurse(12, user9)).thenReturn(bloodDrive3);
 	   
+	   //get coordinator will return a coordinator for a blood drive
 	   when(bloodDriveService.getCoordinator(bloodDrive1)).thenReturn(testCoordinator1);
 	   when(bloodDriveService.getCoordinator(bloodDrive2)).thenReturn(testCoordinator2);
 	   when(bloodDriveService.getCoordinator(bloodDrive3)).thenReturn(testCoordinator3);
 	   
+	   //get blood drive by coordinator will return a single blood drive
 	   when(bloodDriveService.getBloodDriveByCoordinator((long)10, user1)).thenReturn(bloodDrive1);
 	   when(bloodDriveService.getBloodDriveByCoordinator((long)11, user2)).thenReturn(bloodDrive2);
 	   when(bloodDriveService.getBloodDriveByCoordinator((long)12, user3)).thenReturn(bloodDrive3);
 	   
+	   //get nurse by blood drive will return a set of nurses assigned to the blood drive
 	   when(bloodDriveService.getNursesForBloodDrive((long)10, user1)).thenReturn(hospitalNurses1);
 	   when(bloodDriveService.getNursesForBloodDrive((long)11, user2)).thenReturn(hospitalNurses2);
 	   when(bloodDriveService.getNursesForBloodDrive((long)12, user3)).thenReturn(hospitalNurses3);
 	   
+	 //get nurse by blood drive will return a set of nurses NOT assigned to the blood drive
 	   when(bloodDriveService.getUnassignedNurses((long)10, user1)).thenReturn(notHospitalNurses1);
 	   when(bloodDriveService.getUnassignedNurses((long)11, user2)).thenReturn(notHospitalNurses2);
 	   when(bloodDriveService.getUnassignedNurses((long)12, user3)).thenReturn(notHospitalNurses3);
+	   
+	   //get employees will return all employees assigned to a hospital
+	   when(employeeService.getEmployees(user13, hospital1)).thenReturn(hospitalNurses1);
+	   
+	   List<ViewModel> vmlist = new ArrayList<>();
+	   EmployeeSummaryViewModel esvm1 = new EmployeeSummaryViewModel();
+	   esvm1.userId = testNurse1.getUserId();
+	   EmployeeSummaryViewModel esvm2 = new EmployeeSummaryViewModel();
+	   esvm2.userId = testNurse4.getUserId();
+	   vmlist.add(esvm1);
+	   vmlist.add(esvm2);
+	   
+	   //returns a View Model of hospital nurses at hospital 1
+	   when(employeeSummaryViewStrategy.CreateViewModel(hospitalNurses1)).thenReturn(vmlist);
+	   
+	   List<UserNotification> unlist = new ArrayList<>();
+	   UserNotification userNotification1 = new UserNotification();
+	   userNotification1.setNotification(notification1);
+	   unlist.add(userNotification1);
+	   
+	   //returns a set of user notifications for get user notification
+	   when(notificationService.getUserNotifications(user10)).thenReturn(unlist);
+	   
+	 //returns a set of user notifications for get user notification
+	   when(notificationService.getUserNotifications(user10, (long)1)).thenReturn(unlist);
 	   
 	   
 	   

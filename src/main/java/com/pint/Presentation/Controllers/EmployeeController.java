@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class EmployeeController {
 
-    private final Session session;
+    private Session session;
 
 	@Autowired
     private UserHelper userHelper;

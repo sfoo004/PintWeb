@@ -21,6 +21,7 @@ import com.pint.Data.DataFacade;
 import com.pint.Data.Models.BloodDrive;
 import com.pint.Data.Models.Employee;
 import com.pint.Data.Models.Hospital;
+import com.pint.Data.Models.UserNotification;
 import com.pint.Data.Repositories.HospitalRepository;
 import com.pint.Presentation.Controllers.*;
 import com.pint.Presentation.ViewModels.BloodDriveDetailCoordinatorViewModel;
@@ -51,7 +52,6 @@ public class PresentationControllerSubsystemTest extends StubDB {
 //------------------------ HOSPITAL CONTROLLER ----------------------------
 	@Test
 	public void test01S_createHospital() {
-		
 		
         // Assert.
         assertEquals("User succesfully created! (id = 0)", hc.createHospital("Test Hospital"));;
@@ -239,6 +239,7 @@ public class PresentationControllerSubsystemTest extends StubDB {
 		
 	}
 	
+	@Test
 	public void test021S_unassignNurses() throws Exception{
 		
 		when(session.getUser()).thenReturn(user1);
@@ -256,7 +257,49 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	}
 //-------------------EMPLOYEEE CONTROLLER------------------------
 	
+	@Test
+	public void test022S_getEmployees() throws Exception{
+		
+		when(s.getUser()).thenReturn(user13);
+		List<ViewModel> list = (List<ViewModel>)ec.getEmployees();
+		
+		// Assert.
+		assertEquals(2 , list.size());
+		
+	}
 	
+	@Test
+	public void test023S_createEmployee() throws Exception{
+		
+		when(s.getUser()).thenReturn(user13);
+		
+		when(userService.createEmployee(testNurse6.getEmail(), testNurse6.getPassword(), testNurse6.getFirstName(),
+				testNurse6.getLastName(), testNurse6.getPhoneNumber(), UserRole.NURSE, testNurse6.getHospitalId().getId())).thenReturn(testNurse6);
+		
+		// Assert.
+		assertEquals("<200 OK,{}>", ec.createEmployee(testNurse6).toString());
+		
+	}
 //-------------------NOTIFICATION CONTROLLER---------------------
-
+	@Test
+	public void test024S_getUserNotification() throws Exception{
+		
+		when(s.getUser()).thenReturn(user10);
+		
+		// Assert.
+		assertEquals(1, ((List<UserNotification>)n.getUserNotification()).size());
+		
+	}
+	
+	@Test
+	public void test025S_getUserNotifications() throws Exception{
+		
+		when(s.getUser()).thenReturn(user10);
+		
+		// Assert.
+		assertEquals(1, ((List<UserNotification>)n.getUserNotifications((long)1)).size());
+		
+	}
+	
+	
 }
