@@ -51,7 +51,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * @throws Exception
 	 */
 	@Test
-	public void UW010_createEmployee_SD() throws Exception {
+	public void UW001_createEmployee_SD() throws Exception {
 		
 		when(userService.createEmployee("nurse@nurse.com", "test123", "test", "nurse", "3052573457", UserRole.NURSE, (long)2)).thenReturn(testNurse1);
         // Assert.
@@ -63,7 +63,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * @throws Exception
 	 */
 	@Test
-	public void UW011_createEmployee_RD() throws Exception {
+	public void UW002_createEmployee_RD() throws Exception {
 		
 		when(userService.createEmployee("nurse@nurse.com", "test123", "test", "nurse", "3052573457", UserRole.NURSE, (long)2)).thenThrow(Exception.class);
         // Assert.
@@ -74,7 +74,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * Deletes an Employee
 	 */
 	@Test
-	public void UW020_deleteUser_SD() {
+	public void UW003_deleteUser_SD() {
 		
 		doNothing().when(userService).deleteUser("Peter@email.com");
         // Assert.
@@ -85,7 +85,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * Deletes an Employee, but throws an exception
 	 */
 	@Test
-	public void UW021_deleteUser_RD() {
+	public void UW004_deleteUser_RD() {
 		
 		doThrow(Exception.class).when(userService).deleteUser("Peter@email.com");
         // Assert.
@@ -96,7 +96,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * Updates an employee
 	 */
 	@Test
-	public void UW030_updateUser_SD() {
+	public void UW005_updateUser_SD() {
 		
 		when(userService.updateUser(2, "Foo@gmail.com")).thenReturn(user1);
         // Assert.
@@ -107,7 +107,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * Updates an employee, but an exception is thrown
 	 */
 	@Test
-	public void UW031_updateUser_RD() {
+	public void UW006_updateUser_RD() {
 		
 		when(userService.updateUser(2, "Foo@gmail.com")).thenThrow(Exception.class);
         // Assert.
@@ -118,7 +118,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * get all nurses
 	 */
 	@Test
-	public void UW040_getNurses_SD() {
+	public void UW007_getNurses_SD() {
 		
         // Assert.
         assertEquals(3, ((List <Employee>)uc.getNurses(2)).size());
@@ -128,7 +128,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * get all nurses, but an exception is thrown
 	 */
 	@Test
-	public void UW041_getNurses_RD() {
+	public void UW008_getNurses_RD() {
 		
 		when(hospitalService.getNurses((long)2)).thenThrow(Exception.class);
         // Assert.
@@ -139,7 +139,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * get user by their email
 	 */
 	@Test
-	public void UW050_getByEmail_SD() {
+	public void UW009_getByEmail_SD() {
 		
         // Assert.
         assertEquals(user3, uc.getByEmail("employee3@fiu.edu"));
@@ -149,7 +149,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * get user by their email, but an exception is thrown
 	 */
 	@Test
-	public void UW051_getByEmail_RD() {
+	public void UW010_getByEmail_RD() {
 		
 		when(userService.getUserByEmail("employee3@fiu.edu")).thenThrow(Exception.class);
         // Assert.
@@ -161,7 +161,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void UW060_getCurrent_SD() throws InterruptedException{
+	public void UW011_getCurrent_SD() throws InterruptedException{
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
 		SecurityContextHolder.setContext(securityContext);
@@ -174,7 +174,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void UW061_getCurrent_RD() throws InterruptedException{
+	public void UW012_getCurrent_RD() throws InterruptedException{
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated10);
 		SecurityContextHolder.setContext(securityContext);
@@ -187,7 +187,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void UW062_getCurrent_RD() throws InterruptedException{
+	public void UW013_getCurrent_RD() throws InterruptedException{
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Authentication authentication = Mockito.mock(Authentication.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -201,7 +201,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void UW070_changePassword_SD() throws InterruptedException{
+	public void UW014_changePassword_SD() throws InterruptedException{
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
 		SecurityContextHolder.setContext(securityContext);
@@ -222,7 +222,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void UW071_changePassword_RD() throws InterruptedException{
+	public void UW015_changePassword_RD() throws InterruptedException{
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
 		SecurityContextHolder.setContext(securityContext);
@@ -243,7 +243,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void UW072_changePassword_RD() throws InterruptedException{
+	public void UW016_changePassword_RD() throws InterruptedException{
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
 		SecurityContextHolder.setContext(securityContext);
@@ -258,7 +258,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void UW073_changePassword_RD() throws InterruptedException{
+	public void UW017_changePassword_RD() throws InterruptedException{
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
 		SecurityContextHolder.setContext(securityContext);
@@ -272,7 +272,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * Grant role with a valid user
 	 */
 	@Test
-	public void UW080_grantRole_SD() {
+	public void UW018_grantRole_SD() {
 		
 		doNothing().when(userService).updateUser(user9);
         // Assert.
@@ -283,7 +283,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * Grant role with a invalid user
 	 */
 	@Test
-	public void UW081_grantRole_RD() {
+	public void UW019_grantRole_RD() {
 
         // Assert.
         assertEquals("<422 Unprocessable Entity,invalid user id,{}>", uc.grantRole(null, UserRole.DONOR).toString());
@@ -293,7 +293,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * Revoke role with a valid user
 	 */
 	@Test
-	public void UW090_revokeRole_SD() {
+	public void UW020_revokeRole_SD() {
 		
 		doNothing().when(userService).updateUser(user6);
         // Assert.
@@ -304,7 +304,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * Revoke role with a invalid user
 	 */
 	@Test
-	public void UW091_revokeRole_RD() {
+	public void UW021_revokeRole_RD() {
 		
         // Assert.
         assertEquals("<422 Unprocessable Entity,invalid user id,{}>", uc.revokeRole(null, UserRole.DONOR).toString());
@@ -314,7 +314,7 @@ public class UserControllerUnitTest extends StubDB {
 	 * Get list of all current users
 	 */
 	@Test
-	public void UW100_list_SD() {
+	public void UW022_list_SD() {
 		
         // Assert.
         assertEquals(13, uc.list().size());
