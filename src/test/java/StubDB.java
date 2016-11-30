@@ -11,9 +11,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations.*;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.mockito.Mockito;
 
 import com.pint.BusinessLogic.Security.User;
+import com.pint.BusinessLogic.Security.UserAuthentication;
 import com.pint.BusinessLogic.Security.UserHelper;
 import com.pint.BusinessLogic.Security.UserRole;
 import com.pint.BusinessLogic.Services.BloodDriveService;
@@ -68,6 +71,9 @@ public class StubDB {
 	@Mock
 	protected Session s;
 	
+	@Mock
+	protected BCryptPasswordEncoder passwordEncoder;
+	
 	//------------------ INJECTED MOCKED SERVES INTO CONTROLLERS-------------------
 	@InjectMocks
 	protected HospitalController hc = new HospitalController();
@@ -83,6 +89,9 @@ public class StubDB {
 	
 	@InjectMocks
 	protected NotificationController n;
+	
+	@InjectMocks
+	protected Session ses;
 	
 	//Variables in stub DB
 	protected Hospital hospital1;
@@ -120,6 +129,18 @@ public class StubDB {
 	protected Notification notification1;
 	protected Notification notification2;
 	protected Notification notification3;
+	protected UserAuthentication userAuthenticated1;
+	protected UserAuthentication userAuthenticated2;
+	protected UserAuthentication userAuthenticated3;
+	protected UserAuthentication userAuthenticated4;
+	protected UserAuthentication userAuthenticated5;
+	protected UserAuthentication userAuthenticated6;
+	protected UserAuthentication userAuthenticated7;
+	protected UserAuthentication userAuthenticated8;
+	protected UserAuthentication userAuthenticated9;
+	protected UserAuthentication userAuthenticated10;
+	protected UserAuthentication userAuthenticated11;
+	protected UserAuthentication userAuthenticated12;
 	protected List<BloodDrive> hialeahBloodDrive = new ArrayList<>();
 	protected List<BloodDrive> sweetwaterBloodDrive = new ArrayList<>();
 	protected List<BloodDrive> coralGablesBloodDrive = new ArrayList<>();
@@ -238,6 +259,20 @@ public class StubDB {
 	   notification1 = createMockNotification(1, "MOAR BLOOD", "We need more blood", "Give us more blood", bloodDrive1);
 	   notification2 = createMockNotification(2, "WE TOOK TOO MUCH BLOOD", "Someone Donated 10 pints of blood and died", "They were nice enough to donate their organs too :D", bloodDrive2);
 	   notification3 = createMockNotification(3, "NO BLOOD NO SWEAT NO TEARS", "More blood = better football team", "We need more blood to make sacrifices for our team", bloodDrive3);
+	   
+	   //create user Authenticated users
+	   userAuthenticated1 = new UserAuthentication(user1);
+	   userAuthenticated2 = new UserAuthentication(user2);
+	   userAuthenticated3 = new UserAuthentication(user3);
+	   userAuthenticated4 = new UserAuthentication(user4);
+	   userAuthenticated5 = new UserAuthentication(user5);
+	   userAuthenticated6 = new UserAuthentication(user6);
+	   userAuthenticated7 = new UserAuthentication(user7);
+	   userAuthenticated8 = new UserAuthentication(user8);
+	   userAuthenticated9 = new UserAuthentication(user9);
+	   userAuthenticated10 = new UserAuthentication(user10);
+	   userAuthenticated11 = new UserAuthentication(user11);
+	   userAuthenticated12 = new UserAuthentication(user12);
 	   
 	   //get user by Email returns mock user
 	   when(userService.getUserByEmail("employee1@fiu.edu")).thenReturn(user1);
@@ -406,8 +441,6 @@ public class StubDB {
 	   
 	   //returns a set of user notifications for get user notification
 	   when(notificationService.getUserNotifications(user10, (long)1)).thenReturn(unlist);
-	   
-	   
 	   
 	   
    }
