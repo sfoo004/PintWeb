@@ -1,3 +1,9 @@
+/**
+ * Created by Luz Aguilar
+ * Modified by Steve Foo
+ * 11/30/16
+ * Unit testing of the User Controller class
+ */
 import static org.junit.Assert.*;
 
 import com.pint.BusinessLogic.Security.UserRole;
