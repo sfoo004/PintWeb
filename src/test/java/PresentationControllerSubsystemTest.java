@@ -233,8 +233,10 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	 */
 	@Test
 	public void SSTW017_getCurrent_SD() throws InterruptedException{
+		//mock security context
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
+		//set security context holder to mock
 		SecurityContextHolder.setContext(securityContext);
 		//Assert.
 		assertEquals(testNurse2,uc.getCurrent());
@@ -246,8 +248,10 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	 */
 	@Test
 	public void SSTW018_getCurrent_RD() throws InterruptedException{
+		//mock security context
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated10);
+		//set security context holder to mock
 		SecurityContextHolder.setContext(securityContext);
 		//Assert.
 		assertEquals(user10.getUsername(),((User)uc.getCurrent()).getUsername());
@@ -259,9 +263,11 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	 */
 	@Test
 	public void SSTW019_getCurrent_RD() throws InterruptedException{
+		//mock security context
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Authentication authentication = Mockito.mock(Authentication.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		//set security context holder to mock
 		SecurityContextHolder.setContext(securityContext);
 		//Assert.
 		assertEquals((new User(null)).getUsername(),((User)uc.getCurrent()).getUsername());
@@ -273,8 +279,10 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	 */
 	@Test
 	public void SSTW020_changePassword_SD() throws InterruptedException{
+		//mock security context
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
+		//set security context holder to mock
 		SecurityContextHolder.setContext(securityContext);
 		//set up pw encryption
 		BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
@@ -294,8 +302,10 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	 */
 	@Test
 	public void SSTW021_changePassword_RD() throws InterruptedException{
+		//mock security context
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
+		//set security context holder to mock
 		SecurityContextHolder.setContext(securityContext);
 		//set up pw encryption
 		BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
@@ -315,8 +325,10 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	 */
 	@Test
 	public void SSTW022_changePassword_RD() throws InterruptedException{
+		//mock security context
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
+		//set security context holder to mock
 		SecurityContextHolder.setContext(securityContext);
 
 		user5.setNewPassword("abc");
@@ -330,8 +342,10 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	 */
 	@Test
 	public void SSTW023_changePassword_RD() throws InterruptedException{
+		//mock security context
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
+		//set security context holder to mock
 		SecurityContextHolder.setContext(securityContext);
 
 		user5.setNewPassword(null);
@@ -1012,29 +1026,15 @@ public class PresentationControllerSubsystemTest extends StubDB {
 	 */
 	@Test
 	public void SSTW070_getUser_SD() throws Exception{
+		//mock security context
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(userAuthenticated5);
+		//set security context holder with mock
 		SecurityContextHolder.setContext(securityContext);
 		
 		// Assert.
 		assertEquals(user5.getUsername(), ses.getUser().getUsername());
 		
 	}
-	
-//	/**
-//	 * return user not authenticated
-//	 * @throws Exception
-//	 */
-//	@Test
-//	public void test026R_getUser() throws Exception{
-//		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-//		Authentication authentication = Mockito.mock(Authentication.class);
-//		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-//		SecurityContextHolder.setContext(securityContext);
-//		
-//		// Assert.
-//		assertEquals("<401 Unauthorized,{}>", ses.getUser());
-//		
-//	}
 	
 }

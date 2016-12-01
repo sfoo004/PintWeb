@@ -93,10 +93,11 @@ public class StubDB {
 	@InjectMocks
 	protected Session ses;
 	
-	//Variables in stub DB
+	//hospital variables
 	protected Hospital hospital1;
 	protected Hospital hospital2;
 	protected Hospital hospital3;
+	//employee variables
 	protected Employee testCoordinator1;
 	protected Employee testCoordinator2;
 	protected Employee testCoordinator3;
@@ -107,6 +108,7 @@ public class StubDB {
 	protected Employee testNurse5;
 	protected Employee testNurse6;
 	protected Employee testManager1;
+	//user variables
 	protected User user1;
 	protected User user2;
 	protected User user3;
@@ -120,15 +122,19 @@ public class StubDB {
 	protected User user11;
 	protected User user12;
 	protected User user13;
+	//donor variables
 	protected Donor testDonor1;
 	protected Donor testDonor2;
 	protected Donor testDonor3;
+	//blood drive variables
 	protected BloodDrive bloodDrive1;
 	protected BloodDrive bloodDrive2;
 	protected BloodDrive bloodDrive3;
+	//notificaiton variables
 	protected Notification notification1;
 	protected Notification notification2;
 	protected Notification notification3;
+	//user authenticated variables
 	protected UserAuthentication userAuthenticated1;
 	protected UserAuthentication userAuthenticated2;
 	protected UserAuthentication userAuthenticated3;
@@ -141,6 +147,7 @@ public class StubDB {
 	protected UserAuthentication userAuthenticated10;
 	protected UserAuthentication userAuthenticated11;
 	protected UserAuthentication userAuthenticated12;
+	//list variables
 	protected List<BloodDrive> hialeahBloodDrive = new ArrayList<>();
 	protected List<BloodDrive> sweetwaterBloodDrive = new ArrayList<>();
 	protected List<BloodDrive> coralGablesBloodDrive = new ArrayList<>();
@@ -153,13 +160,15 @@ public class StubDB {
 	
 	
 	//---------------------STUB DATABASE METHODS------------------------
- 	protected BloodDrive createMockBloodDrive(long bloodDriveId, String title, String description, Date startTime, Date endTime, String address, int numberofDonors, String city, String state, int zip, Hospital hospitalId) {
+ 	//Mocked create Blood Drive constructor
+	protected BloodDrive createMockBloodDrive(long bloodDriveId, String title, String description, Date startTime, Date endTime, String address, int numberofDonors, String city, String state, int zip, Hospital hospitalId) {
         BloodDrive drive = new BloodDrive(
                 bloodDriveId, title, description, startTime, endTime, address, numberofDonors, city, state, zip, hospitalId);
 
         return drive;
     }
  	
+	//Mocked create User controller
     protected User createMockUser(long id, String username, UserRole role) {
         User user = new User();
         user.setId(id);
@@ -177,6 +186,7 @@ public class StubDB {
         return employee;
     }
     
+  //Mocked create Notification constructor
     protected Notification createMockNotification(long id, String title, String shortDescription, String longDescription, BloodDrive bloodDrive){
     	Notification notification = new Notification(id, title, shortDescription, longDescription);
     	notification.setBloodDrive(bloodDrive);
@@ -184,13 +194,14 @@ public class StubDB {
     	return notification;
     }
 
+  //Mocked create Donor constructor
     protected Donor createMockDonor(User user) {
         Donor donor = new Donor();
         donor.setUserId(user.getId());
 
         return donor;
     }
-    
+    //Mocked create Hospital constructor
     protected Hospital createMockHospital(long hospitalId, String hospitalName) {
         Hospital hospital = new Hospital(hospitalId, hospitalName);
         
@@ -200,7 +211,7 @@ public class StubDB {
         return hospital;
     }
 //----------------------DATA---------------------------------
-    
+    //Initialize all instances
     public void createStubDB(){
 	   
 	   //create mock hospitals
@@ -285,6 +296,7 @@ public class StubDB {
 	   when(userService.getUserByEmail("nurse5@fiu.edu")).thenReturn(user8);
 	   when(userService.getUserByEmail("nurse6@fiu.edu")).thenReturn(user9);
 	   
+	   //puts all the users in a list
 	   List<User> users = new ArrayList<>();
 	   users.add(user1);
 	   users.add(user2);
@@ -303,6 +315,7 @@ public class StubDB {
 	   //list all the mock users from a list
 	   when(userService.getAllUsers()).thenReturn(users);
 	   
+	   //put all hospitals in a list
 	   List<Hospital> hospitals = new ArrayList<>();
        hospitals.add(hospital1);
        hospitals.add(hospital2);
@@ -311,24 +324,30 @@ public class StubDB {
        //returns all the mock hospitals from a list
 	   when(hospitalRepository.getHospitals()).thenReturn(hospitals);
 	   
+	   //assign nurses to hospital 1
 	   hospitalNurses1.add(testNurse1);
 	   hospitalNurses1.add(testNurse4);
 	   
+	   //assign nurses to hospital 2
 	   hospitalNurses2.add(testNurse3);
 	   hospitalNurses2.add(testNurse2);
 	   hospitalNurses2.add(testNurse5);
 	   
+	   //assign nurses to hospital 3
 	   hospitalNurses3.add(testNurse6);
 	   
+	   //nurses not in hospital 1
 	   notHospitalNurses1.add(testNurse3);
 	   notHospitalNurses1.add(testNurse2);
 	   notHospitalNurses1.add(testNurse5);
 	   notHospitalNurses1.add(testNurse6);
-	      
+	     
+	   //nurses not in hospital 2
 	   notHospitalNurses2.add(testNurse6);
 	   notHospitalNurses2.add(testNurse1);
 	   notHospitalNurses2.add(testNurse4);
 	   
+	   //nurses not in hospital 3
 	   notHospitalNurses3.add(testNurse3);
 	   notHospitalNurses3.add(testNurse2);
 	   notHospitalNurses3.add(testNurse5);
@@ -340,10 +359,13 @@ public class StubDB {
 	   when(hospitalService.getNurses((long)2)).thenReturn(hospitalNurses2);
 	   when(hospitalService.getNurses((long)3)).thenReturn(hospitalNurses3);
 	   
+	   //blood drive 2 added to hialeah blood drive
 	   hialeahBloodDrive.add(bloodDrive2);
 	   
+	   //blood drive 1 added to sweet water blood drive
 	   sweetwaterBloodDrive.add(bloodDrive1);
 	   
+	   //blood drive 3 added to coral gables blood drive
 	   coralGablesBloodDrive.add(bloodDrive3);
 	   
 	   //returns mock blood drive based off location
@@ -351,13 +373,14 @@ public class StubDB {
 	   when(bloodDriveService.getBloodDrivesByLocation("SweetWater", "Florida")).thenReturn(sweetwaterBloodDrive);
 	   when(bloodDriveService.getBloodDrivesByLocation("Coral Gables", "Florida")).thenReturn(coralGablesBloodDrive);
 	   
+	   //all blood drives added to a list
 	   List<BloodDrive> bloodDrives = new ArrayList<>();
 	   bloodDrives.add(bloodDrive1);
 	   bloodDrives.add(bloodDrive2);
 	   bloodDrives.add(bloodDrive3);
 	   
 	   //return all blood drives
-//	   when(bloodDriveService.getBloodDrives()).thenReturn(bloodDrives);
+	   //when(bloodDriveService.getBloodDrives()).thenReturn(bloodDrives);
 	   
 	   //returns mock blood drive by Id
 	   when(bloodDriveService.getBloodDriveById((long)10)).thenReturn(bloodDrive1);
@@ -412,7 +435,7 @@ public class StubDB {
 	   when(bloodDriveService.getNursesForBloodDrive((long)11, user2)).thenReturn(hospitalNurses2);
 	   when(bloodDriveService.getNursesForBloodDrive((long)12, user3)).thenReturn(hospitalNurses3);
 	   
-	 //returns set of nurses not assigned to a blood drive
+	   //returns set of nurses not assigned to a blood drive
 	   when(bloodDriveService.getUnassignedNurses((long)10, user1)).thenReturn(notHospitalNurses1);
 	   when(bloodDriveService.getUnassignedNurses((long)11, user2)).thenReturn(notHospitalNurses2);
 	   when(bloodDriveService.getUnassignedNurses((long)12, user3)).thenReturn(notHospitalNurses3);
@@ -420,6 +443,7 @@ public class StubDB {
 	   //returns employees assigned to a hospital
 	   when(employeeService.getEmployees(user13, hospital1)).thenReturn(hospitalNurses1);
 	   
+	   //list that holds a view models
 	   List<ViewModel> vmlist = new ArrayList<>();
 	   EmployeeSummaryViewModel esvm1 = new EmployeeSummaryViewModel();
 	   esvm1.userId = testNurse1.getUserId();
@@ -431,6 +455,7 @@ public class StubDB {
 	   //returns a View Model of hospital nurses at hospital 1
 	   when(employeeSummaryViewStrategy.CreateViewModel(hospitalNurses1)).thenReturn(vmlist);
 	   
+	   //user notification list
 	   List<UserNotification> unlist = new ArrayList<>();
 	   UserNotification userNotification1 = new UserNotification();
 	   userNotification1.setNotification(notification1);
