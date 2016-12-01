@@ -1,4 +1,8 @@
-
+/**
+ * Created by Steve Foo
+ * 11/30/16
+ * Provides stubs and mocks for all Unit and Subsystem test classes present in the package
+ */
 import static org.mockito.Mockito.when;
 
 import java.sql.Date;
